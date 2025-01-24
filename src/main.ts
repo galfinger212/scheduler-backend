@@ -8,7 +8,7 @@ async function bootstrap() {
     origin: process.env.FRONTEND_URL, // Frontend URL
     credentials: true, // Allow cookies or Authorization headers
   });
-
-  await app.listen(3000); // Ensure the backend runs on a specific port
+  const port = process.env.PORT || 3000;
+  await app.listen(port); // Ensure the backend runs on a specific port
 }
 bootstrap();
