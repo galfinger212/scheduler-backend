@@ -7,8 +7,7 @@ async function bootstrap() {
   console.log('process.env.FRONTEND_URL', process.env.FRONTEND_URL);
 
   app.enableCors({
-    origin:
-      process.env.FRONTEND_URL || 'https://jacuzzi-slots-gimel.netlify.app', // Allow frontend URL
+    origin: ['*'],
   });
 
   const port = process.env.PORT || 3000;
