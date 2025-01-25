@@ -27,10 +27,19 @@ export class AppointmentsController {
     return this.appointmentsService.getAvailableHours(date);
   }
 
+  @Get('available/slots')
+  async getAvailableSlots(
+    @Query('date') date: string,
+    @Query('hour') hour: string,
+  ) {
+    return this.appointmentsService.getAvailableSlots(date, parseInt(hour));
+  }
+
   @Post('book')
   async bookAppointment(
     @Req() req: IAuthorizedRequestInterface,
-    @Body() body: { date: string; hour: number },
+    @Body()
+    body: { date: string; hour: number; slots: number; isPaid: boolean },
   ): Promise<{ message: string }> {
     const user = req.user; // Access the user from the request
     console.log('user', user);
@@ -44,6 +53,8 @@ export class AppointmentsController {
     await this.appointmentsService.bookAppointment(
       body.date,
       body.hour,
+      body.slots,
+      body.isPaid,
       user.userId,
     );
 
