@@ -11,7 +11,11 @@ export class AuthController {
   async register(
     @Body() registerDto: RegisterDto,
   ): Promise<{ message: string }> {
-    await this.authService.register(registerDto.email, registerDto.password);
+    await this.authService.register(
+      registerDto.email,
+      registerDto.password,
+      registerDto.fullName,
+    );
     return { message: 'User registered successfully.' };
   }
 

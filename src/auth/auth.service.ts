@@ -11,7 +11,11 @@ import * as jwt from 'jsonwebtoken';
 export class AuthService {
   constructor(private prisma: PrismaService) {}
 
-  async register(email: string, password: string): Promise<void> {
+  async register(
+    email: string,
+    password: string,
+    fullName: string,
+  ): Promise<void> {
     const existingUser = await this.prisma.user.findUnique({
       where: { email },
     });
@@ -24,6 +28,7 @@ export class AuthService {
       data: {
         email,
         password: hashedPassword,
+        fullName,
       },
     });
   }
