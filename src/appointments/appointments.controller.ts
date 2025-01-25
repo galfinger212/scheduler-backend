@@ -6,11 +6,13 @@ import {
   Query,
   Req,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { AppointmentsService } from './appointments.service';
 import { Roles } from 'src/auth/roles/roles.decorator';
 import { Role } from 'src/auth/roles/roles.enum';
 import { IAuthorizedRequestInterface } from 'src/types/User';
+import { RolesGuard } from 'src/auth/roles/roles.guard';
 
 @Controller('appointments')
 export class AppointmentsController {
@@ -49,9 +51,11 @@ export class AppointmentsController {
   }
 
   @Get('all')
-  @Roles(Role.ADMIN) // Only admins can access this route
+  @Roles(Role.ADMIN) // Only allow admins
+  @UseGuards(RolesGuard)
   async getAllAppointments() {
-    return this.appointmentsService.getAllAppointments();
+    // Fetch all appointments with user details
+    return await this.appointmentsService.getAllAppointments();
   }
 
   @Get('my-appointments')
