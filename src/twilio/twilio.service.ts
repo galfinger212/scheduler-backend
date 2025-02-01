@@ -16,7 +16,7 @@ export class TwilioService {
     try {
       const response = await this.client.messages.create({
         body: message,
-        from: 'Spa Meitar', // Alphanumeric Sender ID
+        from: 'Ramadin spa', // Alphanumeric Sender ID
         to: to, // Recipient's number in E.164 format
       });
 
