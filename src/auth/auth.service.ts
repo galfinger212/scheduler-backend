@@ -15,6 +15,7 @@ export class AuthService {
     email: string,
     password: string,
     fullName: string,
+    phoneNumber: string,
   ): Promise<void> {
     const existingUser = await this.prisma.user.findUnique({
       where: { email },
@@ -29,6 +30,7 @@ export class AuthService {
         email,
         password: hashedPassword,
         fullName,
+        phoneNumber,
       },
     });
   }

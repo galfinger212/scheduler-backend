@@ -15,6 +15,7 @@ export class AuthController {
       registerDto.email,
       registerDto.password,
       registerDto.fullName,
+      registerDto.phoneNumber,
     );
     return { message: 'User registered successfully.' };
   }

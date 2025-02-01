@@ -1,9 +1,17 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { TwilioService } from 'src/twilio/twilio.service';
 
 @Injectable()
 export class AppointmentsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly twilioService: TwilioService,
+  ) {}
 
   async bookAppointment(
     date: string,
@@ -44,6 +52,21 @@ export class AppointmentsService {
       return;
     }
 
+    const appointmentDate = new Date(date);
+
+    // Check if the user already has an appointment on this date (any hour)
+    const existingAppointmentForDay = await this.prisma.appointment.findFirst({
+      where: {
+        date: appointmentDate,
+        userId,
+      },
+    });
+
+    if (existingAppointmentForDay) {
+      throw new BadRequestException(
+        'You can only schedule one appointment per day.',
+      );
+    }
     // Create a new appointment
     await this.prisma.appointment.create({
       data: {
@@ -112,5 +135,36 @@ export class AppointmentsService {
       where: { userId },
       orderBy: { date: 'asc' }, // Sort by date (optional)
     });
+  }
+
+  async approveAppointment(appointmentId: string) {
+    const appointment = await this.prisma.appointment.findUnique({
+      where: { id: appointmentId },
+      include: {
+        user: true, // Include user details (to get their phone number)
+      },
+    });
+
+    if (!appointment) {
+      throw new NotFoundException('Appointment not found.');
+    }
+
+    if (appointment.isApproved) {
+      throw new BadRequestException('Appointment is already approved.');
+    }
+
+    // Update appointment status
+    await this.prisma.appointment.update({
+      where: { id: appointmentId },
+      data: { isApproved: true },
+    });
+
+    // Send an SMS to the user
+    if (appointment.user.phoneNumber) {
+      const message = `שלום ${appointment.user.fullName}, התור שלך לתאריך ${new Date(appointment.date).toLocaleDateString()} בשעה ${appointment.hour}:00 אושר בהצלחה!`;
+      await this.twilioService.sendSms(appointment.user.phoneNumber, message);
+    }
+
+    return { message: 'Appointment approved and SMS sent.' };
   }
 }

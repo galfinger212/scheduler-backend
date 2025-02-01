@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  Patch,
   Post,
   Query,
   Req,
@@ -76,5 +78,10 @@ export class AppointmentsController {
       throw new UnauthorizedException('User not authenticated');
     }
     return this.appointmentsService.getUserAppointments(user.userId);
+  }
+
+  @Patch('approve/:id')
+  async approveAppointment(@Param('id') appointmentId: string) {
+    return this.appointmentsService.approveAppointment(appointmentId);
   }
 }

@@ -12,6 +12,7 @@ model User {
   email        String        @unique
   password     String
   fullName     String
+  phoneNumber  String        @default("")
   role         UserRole      @default(USER) // Default role is "user"
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
@@ -19,15 +20,16 @@ model User {
 }
 
 model Appointment {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  date      DateTime
-  hour      Int
-  userId    String   @db.Uuid
-  slots     Int
-  isPaid    Boolean  @default(false)
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  date       DateTime
+  hour       Int
+  userId     String   @db.Uuid
+  slots      Int
+  isPaid     Boolean  @default(false)
+  isApproved Boolean  @default(false)
+  user       User     @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 enum UserRole {
