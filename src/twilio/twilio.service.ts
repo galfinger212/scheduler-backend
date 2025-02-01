@@ -16,7 +16,7 @@ export class TwilioService {
     try {
       const response = await this.client.messages.create({
         body: message,
-        from: process.env.TWILIO_PHONE_NUMBER, // Must be SMS-enabled
+        from: 'Spa Meitar', // Alphanumeric Sender ID
         to: to, // Recipient's number in E.164 format
       });
 
