@@ -4,14 +4,12 @@ import Twilio from 'twilio';
 @Injectable()
 export class TwilioService {
   private client: Twilio.Twilio;
-  private twilioPhoneNumber: string;
 
   constructor() {
     this.client = Twilio(
       process.env.TWILIO_ACCOUNT_SID,
       process.env.TWILIO_AUTH_TOKEN,
     );
-    this.twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER || ''; // Your Twilio number
   }
 
   async sendSms(to: string, message: string) {
