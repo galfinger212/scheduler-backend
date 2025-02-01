@@ -161,7 +161,7 @@ export class AppointmentsService {
 
     // Send an SMS to the user
     if (appointment.user.phoneNumber) {
-      const message = `שלום ${appointment.user.fullName}, התור שלך לתאריך ${new Date(appointment.date).toLocaleDateString()} בשעה ${appointment.hour}:00 אושר בהצלחה!`;
+      const message = `שלום ${appointment.user.fullName}, התור שלך לגקוזי לתאריך ${new Date(appointment.date).toLocaleDateString()} בשעה ${appointment.hour}:00 אושר בהצלחה!`;
       await this.twilioService.sendSms(appointment.user.phoneNumber, message);
     }
 
